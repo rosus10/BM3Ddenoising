@@ -41,8 +41,10 @@ private:
 	int Hd_Ns_half;
 	int Wiener_Ns_half;
 
-	Mat Hd_Wwin2D;
-	Mat Wiener_Wwin2D;
+        Mat Hd_Wwin2D;
+        Mat Wiener_Wwin2D;
+        double Io_Kaiser(double alpha);
+        void Kaiser_Window(Mat &in_fit, int Nf, double beta);
 
 public:
 	BlockMatching(Mat in_noisy_y, int in_sigma);

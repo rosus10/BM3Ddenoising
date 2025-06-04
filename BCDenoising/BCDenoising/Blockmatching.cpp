@@ -2,9 +2,51 @@
 #include <vector>
 #include <algorithm>
 #include "Blockmatching.h"
-#include "RelatedOperations.h"
 
-struct myclass 
+double BlockMatching::Io_Kaiser(double alpha)
+{
+    const double EPS = 1.0e-8;
+    const int MAXTERM = 500;
+    double J = 1.0, K = alpha / 2.0, iOld = 1.0, iNew;
+    bool converge = false;
+
+    for (int i = 1; i < MAXTERM; ++i)
+    {
+        J *= K / i;
+        iNew = iOld + J * J;
+
+        if ((iNew - iOld) < EPS)
+        {
+            converge = true;
+            break;
+        }
+        iOld = iNew;
+    }
+
+    if (!converge)
+        return 0;
+
+    return iNew;
+}
+
+void BlockMatching::Kaiser_Window(Mat &in_fit, int Nf, double beta)
+{
+    Mat Win1(Size(1, Nf), CV_64FC1);
+    double bes = 1.0 / Io_Kaiser(beta);
+    double alpha, pos;
+
+    double *Win1_data = Win1.ptr<double>(0);
+    for (int i = 0; i < (Nf + 1) / 2; ++i)
+    {
+        pos = sqrt(double(i * (Nf - i - 1.0)));
+        alpha = 2 * beta * pos / (Nf - 1.0);
+        Win1_data[i] = Io_Kaiser(alpha) * bes;
+        Win1_data[Nf - 1 - i] = Win1_data[i];
+    }
+    in_fit = Win1 * Win1.t();
+}
+
+struct myclass
 {
 	bool operator() ( Vec2d i, Vec2d j) { return ( i[0]<j[0] );}
 }myobject;
@@ -44,10 +86,9 @@ BlockMatching::BlockMatching(Mat in_noisy_y, int in_sigma)
 	tau_match_wiener = tau_match_wiener*Wiener_N1;
 
 	Hd_Wwin2D = Mat::zeros(Size(Hd_N1,Hd_N1),CV_64FC1);
-	Wiener_Wwin2D = Mat::zeros(Size(Wiener_N1, Wiener_N1), CV_64FC1);
-	RelatedOperations m_operation;
-	m_operation.Kaiser_Window(Hd_Wwin2D, Hd_N1, (double)Hd_beta);
-	m_operation.Kaiser_Window(Wiener_Wwin2D, Wiener_N1, (double)Wiener_beta);
+        Wiener_Wwin2D = Mat::zeros(Size(Wiener_N1, Wiener_N1), CV_64FC1);
+        Kaiser_Window(Hd_Wwin2D, Hd_N1, (double)Hd_beta);
+        Kaiser_Window(Wiener_Wwin2D, Wiener_N1, (double)Wiener_beta);
 }
 
 BlockMatching::~BlockMatching()
