@@ -6,9 +6,7 @@
 #include <sstream>
 #include <cstdio>
 #include <cmath>
-#include "cv.h"
-#include "highgui.h"
-#include "cxcore.h"
+#include <opencv2/opencv.hpp>
 
 using namespace cv;
 using namespace std;

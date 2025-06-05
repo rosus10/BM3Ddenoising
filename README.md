@@ -3,15 +3,20 @@ This project is C++ implementation of the state-of-the-art BM3D (Block matching 
  
 ##(1).	Project Configuration 
 
-The project is implemented in Microsoft Visual C++ 2015 Express and OpenCV 2.2.0. 
-After successfully installing VC2015 and OpenCV 2.2, the BCDenoising solution should set up the necessary including, lib directory and dependable lib files. 
+The project was originally created for Microsoft Visual C++ 2015 Express and OpenCV 2.2.0.
+It now ships with a CMake build script and has been tested with OpenCV 4.
 
-For example, the OpenCV2.2 is installed in “C:\OpenCV2.2\.”. CMake generates a dynamic opencv solution with Visual C++ 2015 in “C:\OpenCV2.2\VS2015\”. All the setups are saved in current solution. Please change them to correct OpenCV directory. 
+### Building with CMake
 
-Go to folder “\BCDenoising\”. Open “BCDenoising.sln” with Visual C++ 2015 ( or other  VC++ versions)  and set it in the Release Mode. In the Solution Explorer window, right-click the BCDenoising and open the property pages.
-1) In the “Configuration Properties->C/C++->General”, input “ C:\OpenCV2.2\include\opencv; C:\OpenCV2.2\VS2010\include” in the Additional Include Directories command.  
-2) In the “Configuration Properties->Linker->General”, input “C:\OpenCV2.2\VS2010\lib” in the Additional Library Directories command.
-3) In the “Configuration Properties->Linker->Input”, add “ opencv_ml220.lib;opencv_imgproc220.lib; opencv_core220.lib; opencv_highgui220.lib” in the Additional dependencies command. 
+```bash
+mkdir build
+cd build
+cmake ..
+make
+```
+
+If you prefer to use Visual Studio, open `BCDenoising.sln` and update the
+include and library paths to point to your local OpenCV (3.x or 4.x) installation.
 
 ##(2).	Program execution
 
@@ -47,4 +52,4 @@ The codes could be further optimized since we use exhaustive full search in both
 ##(5).	References
 
 [1] K. Dabov, A. Foi, V. Katkovnik, and K. Egiazarian, “Image denoising by sparse 3D transform-domain collaborative filtering,” IEEE Trans. Image Process., vol. 16, no. 8, pp. 2080-2095, August 2007. 
-[2] OpenCV 2.2 Reference Manul from the installed OpenCV2.2. 
+[2] OpenCV documentation (tested with OpenCV 4.x).
